@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 'use strict';
 
 const _ = require('lodash');
@@ -13,39 +12,20 @@ const makeWorkorder = require('../util/fixtures/makeWorkorder');
 const createUserAndGroup = require('../util/createUserAndGroup');
 const syncDataset = require('../util/syncDataset');
 
-const argv = require('yargs')
-      .reset()
-      .option('app', {
-        demand: true,
-        type: 'string',
-        alias: 'a',
-        describe: 'Cloud app base URL to target'
-      })
-      .option('username', {
-        demand: true,
-        type: 'string',
-        alias: 'u',
-        describe: 'Username to use to login to the app'
-      })
-      .option('password', {
-        demand: true,
-        type: 'string',
-        alias: 'p',
-        describe: 'Password to use to login to the app'
-      })
-      .option('numUsers', {
-        demand: true,
-        type: 'number',
-        alias: 'n',
-        describe: 'The number of users/workorders needed'
-      })
-      .option('concurrency', {
-        demand: true,
-        type: 'number',
-        alias: 'c',
-        describe: 'The concurrency at which to create resources'
-      })
-      .argv;
+const argv = require('../util/yargopts')
+  .option('numUsers', {
+    demand: true,
+    type: 'number',
+    alias: 'n',
+    describe: 'The number of users/workorders needed'
+  })
+  .option('concurrency', {
+    demand: true,
+    type: 'number',
+    alias: 'c',
+    describe: 'The concurrency at which to create resources'
+  })
+  .argv;
 
 function postUsers(sessionToken, numUsers, concurrency) {
   const users = _.range(1, numUsers + 1).map(makeUser);
@@ -147,10 +127,19 @@ function sendWorkorderSyncRequests(previousResolution) {
   }).then(() => console.log('done!'));
 }
 
-login({ actStart: _.noop, actEnd: _.noop }, rp, argv.app, argv.username, argv.password)
-  .then(sessionToken => postUsers(sessionToken, argv.numUsers, argv.concurrency))
-  .then(initialSync)
-  .then(makeWorkorderRecords)
-  .then(res => batchWorkorderRecords(res, argv.concurrency))
-  .then(sendWorkorderSyncRequests)
-  .catch(console.err);
+function run() {
+  return login({ actStart: _.noop, actEnd: _.noop }, rp, argv.app, argv.username, argv.password)
+    .then(sessionToken => postUsers(sessionToken, argv.numUsers, argv.concurrency))
+    .then(initialSync)
+    .then(makeWorkorderRecords)
+    .then(res => batchWorkorderRecords(res, argv.concurrency))
+    .then(sendWorkorderSyncRequests)
+    .catch(console.err);
+}
+
+// https://nodejs.org/docs/latest/api/all.html#modules_accessing_the_main_module
+if (require.main === module) {
+  return run();
+}
+
+module.exports = run;

@@ -53,7 +53,7 @@ load-runner --output true \
     --pattern 0 1 \
     --concurrency 2 \
     --script scripts/sync-workflow.js \
-    --before ./setup/usersWorkorders.js \
+    --before ./setup \
     -- -a https://wfmdemocloudapponlyexfj.local.feedhenry.io -u trever -p 123
 ```
 
