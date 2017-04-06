@@ -25,8 +25,8 @@ function syncLoop(mainFn, compareFn, interval, initialSyncResult) {
 
     return next(initialSyncResult);
   })
-  // Loop for a max of 2 minutes
-    .timeout(120000);
+  // Loop for a max of 5 minutes
+    .timeout(300000);
 }
 
 module.exports = function createRecord(baseUrl, request, clientId, dataset, postData, preDataAndHash, dataset_hash, query_params, acknowledgements, action) {

@@ -28,7 +28,7 @@ const argv = yargs
 
 function getFieldsFromFileContents(contents) {
   const pattern = _.get(contents, 'pattern', []).join('-');
-  const portalRuns = _.get(_.find(contents.actions, {action: 'Portal: initialSync'}), 'count');
+  const portalRuns = _.get(_.find(contents.actions, {action: 'Portal Flow'}), 'count');
   const deviceRuns = _.get(_.find(contents.actions, {action: 'Mobile Flow'}), 'count');
   const errorCount = _.get(contents, 'errorRuns.status.total', 0) +
         _.get(contents, 'successRuns.status.error', 0);
