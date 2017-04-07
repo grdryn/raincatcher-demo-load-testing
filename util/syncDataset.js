@@ -20,7 +20,7 @@ module.exports = function syncDataset(baseUrl, request, clientId, dataset, clien
     meta_data: {
       clientIdentifier: clientId
     },
-    clientRecs: clientRecs
+    clientRecs: clientRecs || {}
   };
 
   return request.post({
