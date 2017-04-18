@@ -8,13 +8,9 @@ module.exports = function makeWorkorder(userId, workflowId) {
     status: "New",
     workflowId: workflowId,
     address: "The Moon, Earth Orbit",
-    location: {
-      "0": 4,
-      "1": 4
-    },
-    finishDate: "2029-02-23T00:00:00Z",
-    finishTime: "2029-02-23T00:00:00Z",
+    location: [4, 4],
     summary: "Do the work",
-    startTimestamp: "2018-02-23T00:00:00Z"
+    startTimestamp: "2018-02-23T00:00:00Z",
+    finishTimestamp: "2029-02-23T00:00:00Z"
   };
 };
