@@ -60,10 +60,18 @@ module.exports = function mobileFlow(runner, argv, clientId) {
 
       .spread(
         (hashes, clientRecs, user, myWorkorderId) =>
-          act('Device: create New Result', () => create('result', makeResult.createNew(), null, hashes.result, queryParams(user.id).result, [], 'create'))
-          .then(res => doAcknowledge('result', clientRecs[datasets.indexOf('result')], res))
+          act('Device: create New Result', () => {
+            console.log(`CLIENTRECS: ${JSON.stringify(clientRecs)}`);
+            return create('result', makeResult.createNew(), null, hashes.result, queryParams(user.id).result, [], 'create');
+          })
+          .then(res => doAcknowledge('result', clientRecs[datasets.indexOf('result')].clientRecs, res))
 
-          .spread((syncResponse, createdRecord, resultDatasetClientRecs) => act('Device: sync In Progress result', () => create(
+          .spread((syncResponse, createdRecord, resultDatasetClientRecs) => act('Device: sync In Progress result', () =>
+            // console.log(`syncResponse: ${syncResponse}`);
+            // console.log(`createdRecord: ${createdRecord}`);
+            // console.log(`resultDatasetClientRecs: ${resultDatasetClientRecs}`);
+
+             create(
             'result',
             makeResult.updateInProgress(createdRecord.data.id, user.id, myWorkorderId),
             createdRecord, hashes.result, queryParams(user.id).result, [], 'update'))

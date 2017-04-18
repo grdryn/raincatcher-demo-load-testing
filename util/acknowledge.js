@@ -4,15 +4,24 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 
 function getCreatedRecord(syncResponse, syncRecordsResponse) {
+  console.log(`syncResponse: ${JSON.stringify(syncResponse)}`);
+  console.log(`syncRecordsResponse: ${JSON.stringify(syncRecordsResponse)}`);
   const newAndUpdated = _.merge(_.get(syncRecordsResponse, 'res.create', {}),
                                 _.get(syncRecordsResponse, 'res.update', {}));
 
-  return _.find(newAndUpdated, r => r.data.id === _.map(syncResponse.updates.applied, a => a.uid)[0]);
+  console.log(`newandupdated: ${JSON.stringify(newAndUpdated)}`);
+  console.log(`returning: ${_.find(newAndUpdated, r => r.data.id === _.map(syncResponse.updates.applied, a => a.uid)[0]) || {data: {}}}`);
+  return _.find(newAndUpdated, r => r.data.id === _.map(syncResponse.updates.applied, a => a.uid)[0]) || {data: {}};
 }
 
 module.exports = function acknowledge(sync, syncRecords, makeSyncBody, baseUrl, clientId, datasets, dataset, incomingClientRecs, incomingSyncResponse) {
 
   const datasetUrl = `${baseUrl}/mbaas/sync/${dataset}`;
+  console.log('---');
+  console.log(datasetUrl);
+  console.log('---');
+  console.log(incomingClientRecs);
+  console.log('---');
 
   return syncRecords(dataset, incomingClientRecs)
 

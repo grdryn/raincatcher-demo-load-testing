@@ -7,6 +7,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 
 function isApplied(hash, syncResult) {
+  console.log(`Expected Hash: ${hash}`);
   return _.find(_.get(syncResult, 'updates.applied', {}), {'hash': hash}) || false;
 }
 
